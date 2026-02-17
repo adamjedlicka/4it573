@@ -5,6 +5,8 @@ export default defineConfig({
   root: path.join(__dirname, "docs"),
   title: "4IT573",
   icon: "/vse-logo-blue.png",
+  logoText: "4IT573",
+  lang: "cs",
   logo: {
     light: "/vse-logo-blue.png",
     dark: "/vse-logo-blue.png",

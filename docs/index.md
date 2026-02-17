@@ -8,10 +8,10 @@ hero:
   actions:
     - theme: brand
       text: Scripta
-      link: /scripta/
+      link: /zaklady-javascriptu
     - theme: alt
-      text: GitHub
-      link: https://github.com/adamjedlicka/4it573
+      text: O předmětu
+      link: /o-predmetu
   image:
     src: /vse-logo-blue.png
     alt: Logo
