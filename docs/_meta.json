@@ -1,17 +1,23 @@
 [
   "o-predmetu",
+  "semestralni-prace",
   {
     "label": "Scripta",
     "type": "section-header"
   },
-  "zaklady-javascriptu",
-  "asynchronni-programovani",
-  "promises-async-await",
-  "npm-a-jednoduchy-http-server",
-  "hono-ejs-middleware",
-  "databaze-migrace-npx",
-  "websockety",
-  "testovani",
-  "uzivatele-hesla-cookies",
-  "skalovani-parametrizace-produkce"
+  "scripta/zaklady-javascriptu",
+  "scripta/asynchronni-programovani",
+  "scripta/promises-async-await",
+  "scripta/npm-a-jednoduchy-http-server",
+  "scripta/hono-ejs-middleware",
+  "scripta/databaze-migrace-npx",
+  "scripta/websockety",
+  "scripta/testovani",
+  "scripta/uzivatele-hesla-cookies",
+  "scripta/skalovani-parametrizace-produkce",
+  {
+    "label": "Ostatní",
+    "type": "section-header"
+  },
+  "ostatni/memecka"
 ]

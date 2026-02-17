@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Scripta
-      link: /zaklady-javascriptu
+      link: /scripta/zaklady-javascriptu
     - theme: alt
       text: O předmětu
       link: /o-predmetu

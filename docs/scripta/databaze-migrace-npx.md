@@ -75,7 +75,7 @@ Tato konfigurace říká knihovně `drizzle-kit` tři věci:
 
 1. `dialect` - Dialekt generovaného SQL - každý typ databáze (SQLite, PostgreSQL, MySQL, …) mají trošičku odlišné SQL.
 2. `schema` - kde se nachází soubor s JavaScriptovým zápisem schématu.
-3. `dbCredentials` - kde se nachází databáze. [`file:db.sqlite`](file:db.sqlite) znamená že v souboru nazvaným db.sqlite (drizzle si ho vytvoří).
+3. `dbCredentials` - kde se nachází databáze. `file:db.sqlite` znamená že v souboru nazvaným db.sqlite (drizzle si ho vytvoří).
 
 Nyní můžeme vygenerovat migrační SQL soubory:
 
