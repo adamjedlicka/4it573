@@ -12,6 +12,9 @@ hero:
     - theme: alt
       text: O předmětu
       link: /o-predmetu
+    - theme: alt
+      text: Domácí úkoly
+      link: /domaci-ukoly
   image:
     src: /vse-logo-blue.png
     alt: Logo
