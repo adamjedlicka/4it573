@@ -17,6 +17,12 @@
   "scripta/uzivatele-hesla-cookies",
   "scripta/skalovani-parametrizace-produkce",
   {
+    "label": "Zajímavosti",
+    "type": "section-header"
+  },
+  "zajimavosti/thenable",
+  "zajimavosti/async-local-storage",
+  {
     "label": "Ostatní",
     "type": "section-header"
   },
