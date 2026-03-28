@@ -42,6 +42,6 @@ Pokud chcete získat tři body, server musí být schopen z adresáře `public` 
 
 Do vaší Todo aplikace (můžete vycházet i z mojí verze) vytvořte stránku s detailem jednoho todočka. Tato stránku se bude nacházet pod URL `/todo/:id` a na stránce bude vidět titulek todočka a zda je hotové či ne. Dále zde budou odkazy na změnu stavu todočka, odstránění todočka a formulář na změnu titulku todočka. Na tuto stránku se dostanete kliknutím na titulek todočka na hlavní stránce se seznamem všech todoček.
 
-## Úkoly č. 6
+## Úkol č. 6
 
 Do vaší Todo aplikace (můžete vycházet i z mojí verze) přidejte novou migraci přidávající nový sloupeček do tabulky todos - například priority, enum (výčet možností) s možnostmi normal, low a high. Pozor, neupravujte stávající migraci. Zároveň tento nový sloupeček nějak zobrazte na seznamu todoček, na detailu todočka a umožňěte ho upravovat z detailu todočka (buďto pomocí nového formuláře nebo rozšiřte již existující formulář na úpravu titulku).
