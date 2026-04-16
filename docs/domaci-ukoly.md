@@ -51,3 +51,11 @@ Do vaší Todo aplikace (můžete vycházet i z mojí verze) přidejte novou mig
 Doplňte do všech vhodných route handlerů odesílání listu todoček přes websockety + implementujte odesílání detailu todočka přes websockety. Detail todočka se bude odesílat vždy při změně todočka. Příklad: v jednom okně prohlížeče otevřu detail todočka A a ve druhém okně prohlížeče todočko A přejmenuju na todočko B. V prvním okně prohlížeče se mi musí změna automaticky projevit. Pozor: změna todočka může probíhat jak z detailu todočka tak i listu todoček + pokud změním todočko C, nesmím přepsat stránku s detailem jiného todočka. Pokud změnu provedu z detailu todočka, budu tedy odesílat dva eventy. Jeden pro detail daného todočka a druhý pro list todoček.
 
 Bonusový bod: vyřešte mazání todoček. Například když mám v prohlížeči otevřená detail s todočkem, které z jiného prohlížeče smažu, v prvním prohlížeči se mi místo detailu todočka objeví hláška s informací, že todočko bylo smazáno.
+
+## Úkol č. 8
+
+Do svých aplikací doplňte integrační testy, které budou pomocí `app.request` testovat funkcionalitu aplikace. Za každý smysluplný test bude 1 bod.
+
+Poznámka 1: `ava` spuští testy paralelně což může mít vlív na data v databázi. Pokud chcete mít testy více pod kontrolou tak místo `test('název teestu', () => { ... })` použijte (`test.serial('název test', () => { ... })`)
+
+Poznámka 2: `ava` každý testovací soubor (`soubor.test.js`) spouští v odděleném procesu a tudíž in-memory databáze (`file::memory:`) je sdílená pouze pro testy v jednom souboru. Opět můžete využít k tomu aby si testy navzájem nepřepisovali data v databázi.
