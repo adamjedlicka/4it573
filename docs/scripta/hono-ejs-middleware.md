@@ -12,7 +12,7 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'GET' && req.url === '/') {
       const response = await fs.readFile('index.html')
-      res.statusCode = 200 // 200
+      res.statusCode = 200
       res.setHeader('Content-Type', 'text/html')
       res.end(response)
     } else if (req.method === 'POST' && req.url === '/add') {
@@ -41,17 +41,17 @@ server.listen(port, () => {
 })
 ```
 
-Možností je samozřejmě refaktor do pomocných funkcí, ale vše by jsme si museli napsat sami. Mnohem jednodušší řešení je využít knihovnu `express` [https://www.npmjs.com/package/express](https://www.npmjs.com/package/express) . Express je jedna z nejběžnějších knihoven pro psaní serverů.
+Možností je samozřejmě refaktorování do pomocných funkcí, ale vše bychom si museli napsat sami. Mnohem jednodušším řešením je využít knihovnu `express` [https://www.npmjs.com/package/express](https://www.npmjs.com/package/express). Express je jedna z nejběžnějších knihoven pro psaní serverů.
 
 ## Hono
 
-Hono je knihovna, která nám usnadní práci při psaní serverů
+Hono je knihovna, která nám usnadní práci při psaní serverů:
 
 ```jsx
 npm install hono
 ```
 
-Hono samo o sobě neumí vystavit server pod Node.js a tak je potřeba doinstalovat dodatečnou knihovnu.
+Hono samo o sobě neumí vytvořit server pod Node.js, a tak je potřeba doinstalovat dodatečnou knihovnu:
 
 ```jsx
 npm install @hono/node-server
@@ -63,9 +63,9 @@ import { serve } from "@hono/node-server"
 
 const app = new Hono()
 
-// get - HTTP metoda GET (může být i .post .patch .put .delete nebo univerzální .use)
-// / - url pro kterou se zavolá callback
-// c - context ve kterém Hono drří request (c.req), response (c.res) a pomocné funkce.
+// get – HTTP metoda GET (může být i .post, .patch, .put, .delete nebo univerzální .use)
+// / – URL, pro kterou se zavolá callback
+// c – kontext, ve kterém Hono drží request (c.req), response (c.res) a pomocné funkce.
 app.get("/", (c) => {
   // c.html funkce vytvoří HTML odpověď
   return c.html("<h1>Hello, World!</h1>")
@@ -77,18 +77,18 @@ app.get("/json", (c) => {
 })
 
 // :name reprezentuje dynamický parametr
-// /hello/Franta - projde
-// /hello/Lojza - projde
-// /hello - neprojde
-// /hello/Pepa/Zdepa - neprojde
+// /hello/Franta – projde
+// /hello/Lojza – projde
+// /hello – neprojde
+// /hello/Pepa/Zdepa – neprojde
 app.get("/hello/:name", (c) => {
   const name = c.req.param("name")
 
   return c.html(`<h1>Hello, ${name}!</h1>`)
 })
 
-// Univerzální handler který zachytí všechny požadavky,
-// které nezachytili handlery výše a zobrazí 404
+// Univerzální handler, který zachytí všechny požadavky,
+// které nezachytily handlery výše, a zobrazí 404
 app.use((c) => {
   console.log(`Not found: ${c.req.path}`)
   return c.notFound()
@@ -99,10 +99,9 @@ serve(app, (info) => {
     `Server listening at http://localhost:${info.port}`
   )
 })
-
 ```
 
-Pokud chceme vykreslovat dynamické HTML (server vrací personalizovanou odpověď například na základě stavu databáze), je vhodné použít šablonovací knihovnu (něco jako staré PHP které začalo jako šablonovací jazyk). Na NPM šablonovacích knihoven najdeme spousty a zde si ukážeme EJS [https://www.npmjs.com/package/ejs](https://www.npmjs.com/package/ejs)
+Pokud chceme vykreslovat dynamické HTML (server vrací personalizovanou odpověď například na základě stavu databáze), je vhodné použít šablonovací knihovnu (něco jako staré PHP, které začalo jako šablonovací jazyk). Na NPM najdeme šablonovacích knihoven spousty a zde si ukážeme EJS: [https://www.npmjs.com/package/ejs](https://www.npmjs.com/package/ejs).
 
 ```jsx
 npm install ejs
@@ -128,7 +127,6 @@ serve(app, (info) => {
     `App started on http://localhost:${info.port}`
   )
 })
-
 ```
 
 `views/index.html`
@@ -148,7 +146,7 @@ serve(app, (info) => {
 </html>
 ```
 
-Jako druhý parametr funkce `renderFile` můžeme poslat objekt k jehož hodnotám bude mít EJS následně přístup.
+Jako druhý parametr funkce `renderFile` můžeme poslat objekt, k jehož hodnotám bude mít EJS následně přístup.
 
 `index.js`
 
@@ -170,7 +168,7 @@ const todos = [
 
 app.get("/", async (c) => {
   const index = await renderFile("views/index.html", {
-    title: "ToDos!",
+    title: "Todos!",
     todos,
   })
 
@@ -209,36 +207,34 @@ app.get("/", async (c) => {
 </html>
 ```
 
-EJS interpretuje vše co najde uvnitř speciálních tagů.
+EJS interpretuje vše, co najde uvnitř speciálních tagů:
 
-`<%= value %>` bezpečně vypíše hodnotu proměnné `value` (odstraní HTML nebezpečné znaky jako většítka a menšítka - chrání tak proti útokům typu XSS)
-
-`<%- value ->` nebezpečně vypíše hodnotu proměnné `value` . Je možné tedy vkládat HTML. Nikdy nepoužívejte pro proměnné jež obsahují uživatelský obsah.
-
-`<% příkaz %>` používá se pro JavaScriptové příkazy jako `for` nebo `if`.
+- `<%= value %>` bezpečně vypíše hodnotu proměnné `value` (odstraní HTML nebezpečné znaky jako „většítka“ a „menšítka“ – chrání tak proti útokům typu XSS).
+- `<%- value %>` nebezpečně vypíše hodnotu proměnné `value`. Je možné tedy vkládat HTML. Nikdy nepoužívejte pro proměnné, jež obsahují uživatelský obsah.
+- `<% příkaz %>` používá se pro JavaScriptové příkazy jako `for` nebo `if`.
 
 ## Middleware
 
-Jedná se o funkce které jsou spuštené při každém požadavku na server a mohou pracovat s `c.req` a `c.res` objekty. Pomocí druhého parametru - funkce `next` také ovládají kdy je požadavek předán dalšímu middlewaru/handle funkci.
+Jedná se o funkce, které jsou spuštěné při každém požadavku na server a mohou pracovat s objekty `c.req` a `c.res`. Pomocí druhého parametru – funkce `next` – také ovládají, kdy je požadavek předán dalšímu middlewaru nebo handleru.
 
 ```jsx
 app.use(async (c, next) => {
-  // Tento middleware při každém requestu vypíše do konzole metodu a cestu reqeustu
+  // Tento middleware při každém requestu vypíše do konzole metodu a cestu requestu
   console.log(c.req.method, c.req.path)
 
   // Následně předá exekuci dalšímu middleware/handleru
   await next()
 
-  // Poté co nějaký následující middleware/handler vratí odpověď, vypíšeme status
+  // Poté co nějaký následující middleware/handler vrátí odpověď, vypíšeme status
   console.log(c.res.status)
 })
 
 app.use(async (c, next) => {
-  // Pokud uživatel nemaá Authorization hlavičku
+  // Pokud uživatel nemá Authorization hlavičku
   if (!c.req.header("Authorization")) {
     // Nastavíme status na 401
     c.status(401)
-    // A vrátím hlášku Unauthorized
+    // A vrátíme hlášku Unauthorized
     return c.html("<h1>Unauthorized</h1>")
   }
 
@@ -246,7 +242,7 @@ app.use(async (c, next) => {
 })
 ```
 
-Middleware je tak skvělý nástroj pro modifikaci `req` & `res` objektů nebo pro univerzální požadavky (statické soubory)
+Middleware je skvělý nástroj pro modifikaci `req` & `res` objektů nebo pro univerzální požadavky (např. statické soubory):
 
 ```jsx
 // Tento middleware nepoužívejte, existuje lepší řešení
@@ -260,13 +256,13 @@ app.use(async (c, next) => {
 
     return c.newResponse(data)
   } else {
-    // Pokud URL nezačíná na /public jedná se o běžný dotaz a tak ho předáme dál
+    // Pokud URL nezačíná na /public, jedná se o běžný dotaz, a tak ho předáme dál
     await next()
   }
 })
 ```
 
-Middleware jsou spoušteny vždy v pořadí jakém jsou definovány
+Middleware jsou spouštěny vždy v pořadí, v jakém jsou definovány:
 
 ```jsx
 app.use(...) // první
@@ -274,18 +270,18 @@ app.use(...) // druhý
 app.use(...) // třetí
 ```
 
-Middleware je možné omezit na určitou URL/metodu + kombinace
+Middleware je možné omezit na určitou URL nebo metodu:
 
 ```jsx
-app.use('/hello', (c, next) => {}) // GET, POST, ... na URL /hello
-app.get((c, next) => {}) // GET na libovolné URL
+app.use('/hello', (c, next) => {}) // libovolná metoda na URL /hello
+app.get((c, next) => {}) // pouze GET na libovolné URL
 ```
 
-Hono také nabízí několik zabudovaných middlewarů + hromady na NPM
+Hono také nabízí několik zabudovaných middlewarů + hromady dalších na NPM.
 
-## Přidání nového ToDo
+## Přidání nového Todo
 
-Do `views/index.html` přidáme formulář pro vytváření nových ToDo
+Do `views/index.html` přidáme formulář pro vytváření nových Todo:
 
 ```html
 <form action="/todos" method="post">
@@ -294,21 +290,21 @@ Do `views/index.html` přidáme formulář pro vytváření nových ToDo
 </form>
 ```
 
-A do `index.js` přidáme nový route handler
+A do `index.js` přidáme nový route handler:
 
 ```jsx
 // /todos koresponduje s action="/todos" z formuláře
 // .post koresponduje s method="post" z formuláře
 app.post('/todos', async (c) => {
   // Formulář uživatele poslal na URL /todos
-	// Na této URL ovšem nechceme nic zobrazovat
-	// (mohli by jsme zobrazit notifikaci o úspěchu/neúspěchu)
-	// a tak uživatele přesměrujeme zpět na index
-	return c.redirect('/')
+  // Na této URL ovšem nechceme nic zobrazovat
+  // (mohli bychom zobrazit notifikaci o úspěchu/neúspěchu)
+  // a tak uživatele přesměrujeme zpět na index
+  return c.redirect('/')
 })
 ```
 
-Nyní se potřebujeme dostat k hodnotě z inputu text. Hodnoty z formuláře jsou odesílány v nepřívětivém formátu a tak použijeme funkci `c.req.formData()` která nám vrátí obsah formuláře který použijeme při vytvoření nového todo.
+Nyní se potřebujeme dostat k hodnotě z inputu `title`. Hodnoty z formuláře jsou odesílány ve formátu, který je třeba zpracovat funkcí `c.req.formData()`. Ta nám vrátí obsah formuláře, který použijeme při vytvoření nového todo.
 
 ```jsx
 app.post("/todos", async (c) => {
@@ -324,7 +320,7 @@ app.post("/todos", async (c) => {
 })
 ```
 
-Pro kontrolu celý `index.js`
+Pro kontrolu celý `index.js`:
 
 ```jsx
 import { Hono } from "hono"
@@ -336,7 +332,7 @@ import { renderFile } from "ejs"
 const todos = [
   {
     id: 1,
-    title: "Zajit na pivo",
+    title: "Zajít na pivo",
     done: false,
   },
   {
@@ -379,7 +375,7 @@ serve(app, (info) => {
 })
 ```
 
-a `views/index.html`
+A `views/index.html`:
 
 ```jsx
 <!DOCTYPE html>
@@ -409,12 +405,11 @@ a `views/index.html`
     </form>
   </body>
 </html>
-
 ```
 
-## Editace jednotlivých ToDos
+## Editace jednotlivých Todos
 
-Upravíme seznam a přidáme odkazy s akcemi
+Upravíme seznam a přidáme odkazy s akcemi:
 
 ```html
 <ul>
@@ -423,30 +418,30 @@ Upravíme seznam a přidáme odkazy s akcemi
     <a href="/todos/<%= todo.id %>"><%= todo.title %></a>
     -
     <% if (todo.done) { %>
-	    <a href="/todos/<%= todo.id %>/toggle">dokončeno</a>
-	    <a href="/todos/<%= todo.id %>/remove">odebrat</a>
+      <a href="/todos/<%= todo.id %>/toggle">dokončeno</a>
+      <a href="/todos/<%= todo.id %>/remove">odebrat</a>
     <% } else { %>
-	    <a href="/todos/<%= todo.id %>/toggle">nedokončeno</a>
+      <a href="/todos/<%= todo.id %>/toggle">nedokončeno</a>
     <% } %>
   </li>
   <% } %>
 </ul>
 ```
 
-Odkazy z `a` tagů nyní vedou na URL jako `/todos/1/toggle`, `/todos/2/toggle` nebo `/todos/3/remove`. Jedná se tedy o dynamické URL. Proto v Hono použijeme v cestě dynamické parametry. `a` po kliknutí odesílá GET requesty a tak použijeme metodu `.get`
+Odkazy z `a` tagů nyní vedou na URL jako `/todos/1/toggle`, `/todos/2/toggle` nebo `/todos/3/remove`. Jedná se o dynamické URL. Proto v Hono použijeme v cestě dynamické parametry. Odkaz `a` po kliknutí odesílá GET požadavek, a tak použijeme metodu `.get`.
 
 ```jsx
 app.get("/todos/:id/toggle", async (c) => {
-  // Ujistíme se že id je číslo
+  // Ujistíme se, že id je číslo
   const id = Number(c.req.param("id"))
 
   // Najdeme todo podle id
   const todo = todos.find((todo) => todo.id === id)
 
-  // Pokud sme todo nenašli, vrátíme 404 not found
+  // Pokud jsme todo nenašli, vrátíme 404 Not Found
   if (!todo) return c.notFound()
 
-  // Pokud jsme našli změnime status done
+  // Pokud jsme našli, změníme stav done
   todo.done = !todo.done
 
   // Přesměrujeme uživatele zpět na výpis todos
@@ -456,14 +451,13 @@ app.get("/todos/:id/toggle", async (c) => {
 app.get("/todos/:id/remove", async (c) => {
   const id = Number(c.req.param("id"))
 
-  // Pokud chceme smazat prvek v poli musíme najít jeho index (pozici v poli)
+  // Pokud chceme smazat prvek v poli, musíme najít jeho index (pozici v poli)
   const index = todos.findIndex((todo) => todo.id === id)
 
-  // funkce .findIndex vrací -1 pokud element v poli nenašla (0 je první prvek)
-  // vrátíme 404 not found
+  // Funkce .findIndex vrací -1, pokud prvek v poli nenašla
   if (index === -1) return c.notFound()
 
-  // .splice(a, b) odstraní b elementů od indexu a
+  // .splice(a, b) odstraní b prvků od indexu a
   todos.splice(index, 1)
 
   return c.redirect("/")

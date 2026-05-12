@@ -1,12 +1,12 @@
 # Thenable
 
-Jelikož klíčové slovo `await` na pozadí volá funkci `then()`, je možné za `await` dát i něco co není přímo `Promise`. Díky tomu je možné mít kód jako tento:
+Jelikož klíčové slovo `await` na pozadí volá funkci `then()`, je možné za `await` dát i něco, co není přímo `Promise`. Díky tomu je možné mít kód jako tento:
 
 ```javascript
 const users = await db.from('users').select('*').where('age', '>', 18)
 ```
 
-Pokud chceme mít něco s čím `await` korektně funguje, musí to něco mít funkci `then`:
+Pokud chceme mít něco, s čím `await` korektně funguje, musí to mít funkci `then`:
 
 ```javascript
 const thenable = {
@@ -17,23 +17,23 @@ const thenable = {
   }
 }
 
-const message = await thenable // then called
+const message = await thenable // vypíše: then called
 
-console.log(message) // hello from thenable
+console.log(message) // vypíše: hello from thenable
 ```
 
-To můžeme využít v reálu u návrhového vzoru builder:
+To můžeme využít v reálu u návrhového vzoru *builder*:
 
 ```javascript
 const get = (resource) => {
-  // URLSearchparams je třída která nám pomůže vygenerovat tu část URL za otazníkem
+  // URLSearchParams je třída, která nám pomůže vygenerovat tu část URL za otazníkem
   const searchParams = new URLSearchParams();
 
   const builder = {
     select: (select) => {
       searchParams.set("select", select.join(","));
 
-      // Vracíme builder (sami sebe) aby se funkce dali na sebe řetězit
+      // Vracíme builder (samotný objekt), aby se funkce daly řetězit
       return builder;
     },
     limit: (limit) => {
@@ -47,7 +47,7 @@ const get = (resource) => {
 
       return builder;
     },
-    // Někdo tyto dva parametry nazývá onFulfilled a onRejected, ja je pojmenoval resolve a reject protože fungují stejně jako v Promise
+    // Někdo tyto dva parametry nazývá onFulfilled a onRejected, já je pojmenoval resolve a reject, protože fungují stejně jako v Promise
     then: (resolve, reject) => {
       const query = searchParams.toString();
       const url = `https://dummyjson.com/${resource}?${query}`;
@@ -70,5 +70,4 @@ const users = await get("users")
   .sort("lastName", "asc");
 
 console.log(users);
-
 ```

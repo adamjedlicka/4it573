@@ -1,26 +1,20 @@
 # Databáze, migrace & NPX (Drizzle)
 
-Jako databázi budeme požívat SQLite 
+Jako databázi budeme používat SQLite: [SQLite Home Page](https://www.sqlite.org/). Pro komunikaci s databází využijeme knihovnu Drizzle: [Drizzle ORM](https://orm.drizzle.team/).
 
-[SQLite Home Page](https://www.sqlite.org/)
-
-A JS knihovnu pro komunikaci s databází využijeme Drizzle 
-
-[Drizzle ORM - next gen TypeScript ORM.](https://orm.drizzle.team/)
-
-Nejprve nainstalujeme knihovnu `drizzle-orm` 
+Nejprve nainstalujeme knihovnu `drizzle-orm`:
 
 ```jsx
 npm install drizzle-orm
 ```
 
-Drizzle je ORM (object-relational mapper) je knihovna která bude náš objektový JS kód převádět na relační jazyk SQL kterému rozumí databáze. Tato knihovna jako samotná komunikovat s databází neumí a proto musím nainstalovat ještě jednu dodatečnou knihovnu.
+Drizzle je ORM (Object-Relational Mapper) – knihovna, která bude náš objektový JS kód převádět na relační jazyk SQL, kterému rozumí databáze. Tato knihovna sama o sobě komunikovat s databází neumí, a proto musíme nainstalovat ještě jednu dodatečnou knihovnu:
 
 ```jsx
 npm install @libsql/client
 ```
 
-Pro jednoduší práci s drizzle knihovnou při vývoji, drizzle nabízí další knihovnu `drizzle-kit`. Tato knihovna nabízí například grafické rozhraní pro prohlížení dat v databázi nebo příkazy pro vytváření a spouštění migrací. Nainstalujeme ji tedy také.
+Pro jednodušší práci s knihovnou Drizzle při vývoji nabízí Drizzle balíček `drizzle-kit`. Ten obsahuje například grafické rozhraní pro prohlížení dat v databázi nebo příkazy pro vytváření a spouštění migrací. Nainstalujeme jej tedy také:
 
 ```jsx
 npm install drizzle-kit
@@ -28,7 +22,7 @@ npm install drizzle-kit
 
 ## Definice schématu databáze
 
-SQLite jako všechny relační databáze vyžadují schéma. Toto schéma se standardně definuje jazykem SQL. My si ho ale necháme od drizzlu vygenerovat. Aby ho drizzle dokázal vygenerovat, musíme ho ale definovat v JavaScriptu. Založíme soubor `src/schema.js` kde ho definujeme.
+SQLite, jako všechny relační databáze, vyžaduje schéma. Toto schéma se standardně definuje jazykem SQL. My si jej ale necháme od Drizzlu vygenerovat. Aby jej Drizzle dokázal vytvořit, musíme jej definovat v JavaScriptu. Založíme soubor `src/schema.js`, kde jej popíšeme:
 
 ```jsx
 // src/schema.js
@@ -40,25 +34,22 @@ export const todosTable = sqliteTable("todos", {
   title: text().notNull(),
   done: int({ mode: "boolean" }).notNull(),
 })
- 
 ```
 
-Toto schéma nyní exportuje jedno tabulku nazvanou `todos`. Tato tabulka má tři sloupečky: `id`, `title` a `done`.
+Toto schéma nyní exportuje jednu tabulku nazvanou `todos`. Tato tabulka má tři sloupečky: `id`, `title` a `done`.
 
-Sloupeček `id` bude obsahovat pouze celá čísla `int()`, jedná se o primární klíč (unikátní identifikátor záznamu v datázi) `primaryKey()` a jeho hodnotu si necháme generovat databází `autoIncrement: true` .
+- Sloupeček `id` bude obsahovat pouze celá čísla `int()`, jedná se o primární klíč (unikátní identifikátor záznamu v databázi) `primaryKey()` a jeho hodnotu si necháme generovat databází `autoIncrement: true`.
+- Sloupeček `title` je textový `text()` a nenulový `notNull()`.
+- Sloupeček `done` by ideálně obsahoval booleanovskou hodnotu true/false, ale tu SQLite přímo nepodporuje. Definujeme tedy sloupeček jako celé číslo v módu `boolean` – Drizzle bude automaticky převádět na true/false a obráceně.
 
-Sloupeček `title` je textový `text()` a ne-null-ový `notNull()`.
-
-Sloupeček `done` by ideálně obsahoval boolean-ovskou hodnotu true/false, ale ty SQLite nepodporuje. Definujeme tedy sloupeček jako celé číslo v módu `boolean` - drizzle bude automaticky převádět na true/false a obráceně.
-
-Schéma máme a pomocí `drizzle-kit` z něj můžeme nechat vygenerovat SQL příkazy (migrace) které uvedou databázi do žádaného stavu. Nejprve musíme ale `drizzle-kit` nakonfigurovat.
+Schéma máme hotové a pomocí `drizzle-kit` z něj můžeme nechat vygenerovat SQL příkazy (migrace), které uvedou databázi do žádaného stavu. Nejprve musíme ale `drizzle-kit` nakonfigurovat.
 
 ## Nastavení knihovny drizzle-kit
 
-Pokud chceme používat knihovnu drizzle-kit na správu databáze, musíme ji nejdříve nastavit (například definovat kde se databáze nachází). Tato konfigurace se nachází v souboru `drizzle.config.js` v root adresáži projektu (zde musíme dodržet jak umístění souboru tak jmennou konvenci).
+Pokud chceme používat knihovnu `drizzle-kit` na správu databáze, musíme ji nejdříve nastavit (například definovat, kde se databáze nachází). Tato konfigurace se nachází v souboru `drizzle.config.js` v kořenovém adresáři projektu (zde musíme dodržet jak umístění souboru, tak jmennou konvenci).
 
 ```jsx
-// drizzle.coonfig.js
+// drizzle.config.js
 
 import { defineConfig } from "drizzle-kit"
 
@@ -73,9 +64,9 @@ export default defineConfig({
 
 Tato konfigurace říká knihovně `drizzle-kit` tři věci:
 
-1. `dialect` - Dialekt generovaného SQL - každý typ databáze (SQLite, PostgreSQL, MySQL, …) mají trošičku odlišné SQL.
-2. `schema` - kde se nachází soubor s JavaScriptovým zápisem schématu.
-3. `dbCredentials` - kde se nachází databáze. `file:db.sqlite` znamená že v souboru nazvaným db.sqlite (drizzle si ho vytvoří).
+1. `dialect` – Dialekt generovaného SQL. Každý typ databáze (SQLite, PostgreSQL, MySQL...) má trošičku odlišné SQL.
+2. `schema` – Kde se nachází soubor s JavaScriptovým zápisem schématu.
+3. `dbCredentials` – Kde se nachází databáze. `file:db.sqlite` znamená, že bude v souboru nazvaném `db.sqlite` (Drizzle si jej vytvoří).
 
 Nyní můžeme vygenerovat migrační SQL soubory:
 
@@ -83,17 +74,15 @@ Nyní můžeme vygenerovat migrační SQL soubory:
 npx drizzle-kit generate
 ```
 
-Drizzle by měl vytvořit nový adresář nazvaný `drizzle` a v něm `0000_nejaka_slova.sql` - SQL soubor s migrací. Adresář `drizzle/meta` obsahuje dodatečné meta-informace pro drizzle, které nás aktuálně nazajímají.
+Drizzle by měl vytvořit nový adresář nazvaný `drizzle` a v něm soubor `0000_nejaka_slova.sql` – SQL soubor s migrací. Adresář `drizzle/meta` obsahuje dodatečné metainformace pro Drizzle, které nás aktuálně nezajímají.
 
-Pokud chceme migrace aplikovat do databáze provedeme to příkazem
+Pokud chceme migrace aplikovat do databáze, provedeme to příkazem:
 
 ```jsx
 npx drizzle-kit migrate 
 ```
 
-Měl by vzniknout soubor `db.sqlite` obsahující naši databázi.
-
-Obsah databáze můžeme prohlížet a modifikovat aplikací Drizzle Studio kterou spustíme příkazem
+Měl by vzniknout soubor `db.sqlite` obsahující naši databázi. Obsah databáze můžeme prohlížet a modifikovat aplikací Drizzle Studio, kterou spustíme příkazem:
 
 ```jsx
 npx drizzle-kit studio
@@ -103,13 +92,11 @@ npx drizzle-kit studio
 
 ## NPX
 
-Určitě jste si všimli, že u posledního příkazu jsme použili příkaz `npx` a ne `npm`. Node.js knihovny mohou vedle zdrojového kódu přibalit malé konzolové aplikace které nám usnadní vývoj - CLI. S těmito CLI interakujeme pomocí příkazu `npm`. Tzn `npx drizzle-kit` spustí CLI dodávané s knihovnou Drizzle. 
+Určitě jste si všimli, že u posledního příkazu jsme použili příkaz `npx`, a ne `npm`. Node.js knihovny mohou vedle zdrojového kódu přibalit malé konzolové aplikace, které nám usnadní vývoj – CLI. S těmito CLI interagujeme pomocí příkazu `npx`. Tzn. `npx drizzle-kit` spustí CLI dodávané s knihovnou Drizzle.
 
 ## Načítání todos z databáze
 
-Pokud sme si pomocí Drizzle Studio vložili do databáze nějaké testovací todočka, můžeme je nyní načíst v naší aplikaci.
-
-Nejprve vytvoříme spojení do naší databáze:
+Pokud jsme si pomocí Drizzle Studio vložili do databáze nějaká testovací todočka, můžeme je nyní načíst v naší aplikaci. Nejprve vytvoříme spojení do naší databáze:
 
 ```jsx
 // index.js
@@ -123,11 +110,9 @@ const db = drizzle({
 // zbytek aplikace...
 ```
 
-`connection` musí odkazovat na stejnou databázi jako v `drizzle.config.js`.
+`connection` musí odkazovat na stejnou databázi jako v `drizzle.config.js`. `logger` určuje, zda má Drizzle do konzole vypisovat spuštěné SQL příkazy. Pro lepší pochopení toho, co Drizzle dělá na pozadí, jej necháme na `true`.
 
-`logger` určuje zda má drizzle do konzole vypisovat spuštěné SQL příkazy. Pro lepší pochopení co drizzle dělá na pozadí nechám na `true`.
-
-Nyní můžeme v handleru pro index načít todočka z databáze:
+Nyní můžeme v handleru pro index načíst todočka z databáze:
 
 ```jsx
 // index.js
@@ -145,13 +130,11 @@ app.get("/", async (c) => {
 })
 ```
 
-Zde přibyl jeden nový import a to definice `todosTable` z našeho schématu - pozor: importujeme soubor a tak nezapomenout na `.js` příponu na konci souboru.
-
-Načítání z databáze je asynchronní operace a tak musíme použít klíčové slovo `await`. `select()` funkce značí, že z databáze chceme načíst data. `from()` funkce určuje z jaké tabulky a `all()` funkce říká, že z tabulky chceme načíst vše.
+Zde přibyl jeden nový import, a to definice `todosTable` z našeho schématu – pozor, importujeme soubor, takže nezapomeňte na příponu `.js` na konci. Načítání z databáze je asynchronní operace, a tak musíme použít klíčové slovo `await`. Funkce `select()` značí, že chceme načíst data, `from()` určuje tabulku a `all()` říká, že chceme načíst vše.
 
 ## Vložení dat do databáze
 
-Nyní upravíme handler pro vytváření nových todoček.
+Nyní upravíme handler pro vytváření nových todoček:
 
 ```jsx
 // index.js
@@ -168,7 +151,7 @@ app.post("/todos", async (c) => {
 })
 ```
 
-Databáze nemusíme předávat hodnotu `id` jelikož si ji vygeneruje sama - auto increment.
+Databázi nemusíme předávat hodnotu `id`, jelikož si ji vygeneruje sama (auto increment).
 
 ## Získání jednoho todočka
 
@@ -180,7 +163,7 @@ import { eq } from "drizzle-orm"
 app.get("/todos/:id", async (c) => {
   const id = Number(c.req.param("id"))
 
-  const todo = await await db
+  const todo = await db
     .select()
     .from(todosTable)
     .where(eq(todosTable.id, id))
@@ -196,7 +179,7 @@ app.get("/todos/:id", async (c) => {
 })
 ```
 
-Zde nám opět přibude nový import: `eq` (equals). Získání jednoho todočka má navíc funkci `where()` pomocí které omezujeme jaké todočka chceme z databáze získat. Konkrétně zde je omezení na získání todoček jejich hodnota v sloupečku `todosTable.id` se rovná hodnotě v konstantě `id` . Funkce `get()` na rozdíl od all vrátí pouze jeden záznam který můžeme rovnou uložit do konstanty `todo`.
+Zde přibyl nový import: `eq` (equals). Získání jednoho todočka má navíc funkci `where()`, pomocí které omezujeme, co chceme z databáze získat. Konkrétně zde je podmínka, že se hodnota ve sloupečku `todosTable.id` musí rovnat hodnotě v konstantě `id`. Funkce `get()` na rozdíl od `all()` vrátí pouze jeden záznam.
 
 ## Úprava todočka
 
@@ -223,7 +206,7 @@ app.post("/todos/:id", async (c) => {
 })
 ```
 
-Pro úpravu dat v databázi využijeme funkci `update()`. Zde pozor - nesmíme zapomenout na omezující funkci `where()` jinak upravíme všechny todočka v databáze, ne pouze to jedno žádané. Funkce `set()` očekává objekt s daty které chceme změnit - nemusíme tedy poslat celé todočko.
+Pro úpravu dat využijeme funkci `update()`. Zde pozor – nesmíme zapomenout na omezující funkci `where()`, jinak upravíme všechna todočka v databázi! Funkce `set()` očekává objekt s daty, která chceme změnit.
 
 ## Smazání todočka
 
@@ -245,4 +228,4 @@ app.get("/todos/:id/remove", async (c) => {
 })
 ```
 
-Smazání je jednoduché. Zde opět pozor na nevynechání omezující `where()` podmínky jinak smažeme celou tabulku!
+Smazání je jednoduché. Zde opět pozor na vynechání podmínky `where()`, jinak smažete celou tabulku!

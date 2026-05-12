@@ -1,22 +1,22 @@
-import * as path from "node:path";
-import { defineConfig } from "@rspress/core";
+import * as path from 'node:path';
+import { defineConfig } from '@rspress/core';
 
 export default defineConfig({
-  root: path.join(__dirname, "docs"),
-  title: "4IT573",
-  icon: "/vse-logo-blue.png",
-  logoText: "4IT573",
-  lang: "cs",
+  root: path.join(__dirname, 'docs'),
+  title: '4IT573',
+  icon: '/vse-logo-blue.png',
+  logoText: '4IT573',
+  lang: 'cs',
   logo: {
-    light: "/vse-logo-blue.png",
-    dark: "/vse-logo-blue.png",
+    light: '/vse-logo-blue.png',
+    dark: '/vse-logo-blue.png',
   },
   themeConfig: {
     socialLinks: [
       {
-        icon: "github",
-        mode: "link",
-        content: "https://github.com/adamjedlicka/4it573",
+        icon: 'github',
+        mode: 'link',
+        content: 'https://github.com/adamjedlicka/4it573',
       },
     ],
   },
