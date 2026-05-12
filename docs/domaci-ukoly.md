@@ -34,28 +34,32 @@ Pokročilejší program za 3 body musí využít „paralelizaci“ pomocí `Pro
 
 ## Úkol č. 4
 
-Vytvořte server, který po navštívení `/` cesty vrátí prohlížeči obsah souboru `index.html`. Po navštívení jakékoliv jiné cesty, například (`/test.txt`), se server podívá jestli v adresáři `public` existuje soubor s daným jménem (v tomto případě `test.txt`), pokud ano, vrátí ho prohlížeči a pokud ne vrátí prohlížeči obsah souboru `404.html` a nastaví správný návratový HTTP status kód. Server předem neví obsah adresáře public - za běhu serveru musí jít do adresáře přidat nový soubor a server ho musí být schopen vrátit bez toho aby sme server restartovali.
+Vytvořte server, který po navštívení `/` cesty vrátí prohlížeči obsah souboru `index.html`. Po navštívení jakékoliv jiné cesty, například (`/test.txt`), se server podívá, zda v adresáři `public` existuje soubor s daným jménem (v tomto případě `test.txt`). Pokud ano, vrátí ho prohlížeči, a pokud ne, vrátí prohlížeči obsah souboru `404.html` a nastaví správný návratový HTTP status kód. Server předem neví obsah adresáře public – za běhu serveru musí být možné do adresáře přidat nový soubor a server ho musí být schopen vrátit, aniž byste jej museli restartovat.
 
-Pokud chcete získat tři body, server musí být schopen z adresáře `public` vracet prohlížeči i jiné, než jen textové soubory (například i obrázky).
+Pokud chcete získat tři body, server musí být schopen z adresáře `public` vracet prohlížeči i jiné než jen textové soubory (například i obrázky).
 
 ## Úkol č. 5
 
-Do vaší Todo aplikace (můžete vycházet i z mojí verze) vytvořte stránku s detailem jednoho todočka. Tato stránku se bude nacházet pod URL `/todo/:id` a na stránce bude vidět titulek todočka a zda je hotové či ne. Dále zde budou odkazy na změnu stavu todočka, odstránění todočka a formulář na změnu titulku todočka. Na tuto stránku se dostanete kliknutím na titulek todočka na hlavní stránce se seznamem všech todoček.
+Do vaší Todo aplikace (můžete vycházet i z mé verze) vytvořte stránku s detailem jednoho todočka. Tato stránka se bude nacházet pod URL `/todo/:id` a na stránce bude vidět titulek todočka a zda je hotové, či ne. Dále zde budou odkazy na změnu stavu todočka, odstranění todočka a formulář na změnu titulku todočka. Na tuto stránku se dostanete kliknutím na titulek todočka na hlavní stránce se seznamem všech todoček.
 
 ## Úkol č. 6
 
-Do vaší Todo aplikace (můžete vycházet i z mojí verze) přidejte novou migraci přidávající nový sloupeček do tabulky todos - například priority, enum (výčet možností) s možnostmi normal, low a high. Pozor, neupravujte stávající migraci. Zároveň tento nový sloupeček nějak zobrazte na seznamu todoček, na detailu todočka a umožňěte ho upravovat z detailu todočka (buďto pomocí nového formuláře nebo rozšiřte již existující formulář na úpravu titulku).
+Do vaší Todo aplikace (můžete vycházet i z mé verze) přidejte novou migraci přidávající nový sloupeček do tabulky todos – například priority, enum (výčet možností) s možnostmi normal, low a high. Pozor, neupravujte stávající migraci. Zároveň tento nový sloupeček nějak zobrazte na seznamu todoček, na detailu todočka a umožněte ho upravovat z detailu todočka (buďto pomocí nového formuláře, nebo rozšiřte již existující formulář na úpravu titulku).
 
 ## Úkol č. 7
 
-Doplňte do všech vhodných route handlerů odesílání listu todoček přes websockety + implementujte odesílání detailu todočka přes websockety. Detail todočka se bude odesílat vždy při změně todočka. Příklad: v jednom okně prohlížeče otevřu detail todočka A a ve druhém okně prohlížeče todočko A přejmenuju na todočko B. V prvním okně prohlížeče se mi musí změna automaticky projevit. Pozor: změna todočka může probíhat jak z detailu todočka tak i listu todoček + pokud změním todočko C, nesmím přepsat stránku s detailem jiného todočka. Pokud změnu provedu z detailu todočka, budu tedy odesílat dva eventy. Jeden pro detail daného todočka a druhý pro list todoček.
+Doplňte do všech vhodných route handlerů odesílání seznamu todoček přes websockety + implementujte odesílání detailu todočka přes websockety. Detail todočka se bude odesílat vždy při změně todočka. Příklad: v jednom okně prohlížeče otevřu detail todočka A a ve druhém okně prohlížeče todočko A přejmenujete na todočko B. V prvním okně prohlížeče se mi musí změna automaticky projevit. Pozor: změna todočka může probíhat jak z detailu todočka, tak i ze seznamu todoček + pokud změním todočko C, nesmím přepsat stránku s detailem jiného todočka. Pokud změnu provedu z detailu todočka, budu tedy odesílat dva eventy. Jeden pro detail daného todočka a druhý pro seznam todoček.
 
-Bonusový bod: vyřešte mazání todoček. Například když mám v prohlížeči otevřená detail s todočkem, které z jiného prohlížeče smažu, v prvním prohlížeči se mi místo detailu todočka objeví hláška s informací, že todočko bylo smazáno.
+Bonusový bod: vyřešte mazání todoček. Například když mám v prohlížeči otevřený detail s todočkem, které z jiného prohlížeče smažu, v prvním prohlížeči se mi místo detailu todočka objeví hláška s informací, že todočko bylo smazáno.
 
 ## Úkol č. 8
 
 Do svých aplikací doplňte integrační testy, které budou pomocí `app.request` testovat funkcionalitu aplikace. Za každý smysluplný test bude 1 bod.
 
-Poznámka 1: `ava` spuští testy paralelně což může mít vlív na data v databázi. Pokud chcete mít testy více pod kontrolou tak místo `test('název teestu', () => { ... })` použijte (`test.serial('název test', () => { ... })`)
+Poznámka 1: `ava` spouští testy paralelně, což může mít vliv na data v databázi. Pokud chcete mít testy více pod kontrolou, tak místo `test('název testu', () => { ... })` použijte `test.serial('název testu', () => { ... })`.
 
-Poznámka 2: `ava` každý testovací soubor (`soubor.test.js`) spouští v odděleném procesu a tudíž in-memory databáze (`file::memory:`) je sdílená pouze pro testy v jednom souboru. Opět můžete využít k tomu aby si testy navzájem nepřepisovali data v databázi.
+Poznámka 2: `ava` každý testovací soubor (`soubor.test.js`) spouští v odděleném procesu, a tudíž in-memory databáze (`file::memory:`) je sdílená pouze pro testy v jednom souboru. Opět toho můžete využít k tomu, aby si testy navzájem nepřepisovaly data v databázi.
+
+## Úkol č. 9
+
+Do svých Todo aplikací doplňte nepovinnou vazbu mezi todočky a uživateli. Pokud je uživatel přihlášen, jakékoliv nově vytvořené todo je s uživatelem svázáno a na seznamu todoček a na detailu todočka je dané todo vidět jen tehdy, pokud je daný uživatel přihlášen -> tzn., pokud se odhlásí a bude anonymní nebo se přihlásí jako jiný uživatel, todočko vidět nebude.
